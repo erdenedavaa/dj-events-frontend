@@ -1,0 +1,10 @@
+.footer {
+  /* margin: 100px 0 40px; */
+  margin: auto 0 40px;
+  text-align: center;
+  /* margin-top: auto; */
+}
+
+.footer p {
+  margin: 5px 0;
+}
