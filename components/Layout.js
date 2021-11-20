@@ -1,9 +1,13 @@
 import Head from 'next/head'
-import styles from '../styles/Layout.module.css'
+import styles from '@/styles/Layout.module.css'
 import Footer from './Footer'
 import Header from './Header'
+import Showcase from './Showcase'
+import { useRouter } from 'next/router'
 
 export default function Layout({ title, keywords, description, children }) {
+  const router = useRouter()
+
   return (
     <div className={styles.infoBody}>
       <Head>
@@ -13,6 +17,8 @@ export default function Layout({ title, keywords, description, children }) {
       </Head>
 
       <Header />
+
+      {router.pathname === '/' && <Showcase />}
 
       <div className={styles.container}>{children}</div>
       <Footer />
