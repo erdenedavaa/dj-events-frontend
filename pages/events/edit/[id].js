@@ -1,6 +1,7 @@
 import moment from 'moment'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { parseCookies } from '@/helpers/index'
 
 import { useState } from 'react'
 import Layout from '@/components/Layout'
@@ -13,7 +14,7 @@ import { FaImage } from 'react-icons/fa'
 import Modal from '@/components/Modal'
 import ImageUpload from '@/components/ImageUpload'
 
-export default function EditEventPage({ evt }) {
+export default function EditEventPage({ evt, token }) {
   const [values, setValues] = useState({
     name: evt.name,
     performers: evt.performers,
@@ -47,12 +48,16 @@ export default function EditEventPage({ evt }) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(values),
     })
 
     if (!res.ok) {
-      toast.error('Something Went Wrong')
+      if (res.status === 403 || res.status === 401) {
+        toast.error('Unauthorized ')
+        return
+      }
     } else {
       const evt = await res.json()
       router.push(`/events/${evt.slug}`)
@@ -174,7 +179,7 @@ export default function EditEventPage({ evt }) {
       </div>
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
+        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} token={token} />
       </Modal>
     </Layout>
   )
@@ -182,12 +187,14 @@ export default function EditEventPage({ evt }) {
 
 // req -d server side cookie is locate
 export async function getServerSideProps({ params: { id }, req }) {
+  const { token } = parseCookies(req)
+
   const res = await fetch(`${API_URL}/events/${id}`)
   const evt = await res.json()
 
-  console.log(req.headers.cookie)
+  // console.log(req.headers.cookie)
 
   return {
-    props: { evt },
+    props: { evt, token },
   }
 }
