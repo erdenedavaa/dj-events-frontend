@@ -37,7 +37,7 @@ export default function EventMap({ evt }) {
 
   if (loading) return false
 
-  console.log(lat, lng)
+  // console.log(lat, lng)
 
   return (
     <ReactMapGl

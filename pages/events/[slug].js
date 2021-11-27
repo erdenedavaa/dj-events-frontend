@@ -7,11 +7,10 @@ import Image from 'next/image'
 import { FaPencilAlt, FaTimes } from 'react-icons/fa'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 export default function EventPage({ evt }) {
-  const router = useRouter()
-
+  // const router = useRouter()
 
   return (
     <Layout>
@@ -49,34 +48,23 @@ export default function EventPage({ evt }) {
   )
 }
 
-// // combination of getStaticPath and getStaticProps
-// export async function getStaticPaths() {
-//   const res = await fetch(`${API_URL}/events`)
-//   const events = await res.json()
+// combination of getStaticPath and getStaticProps
+export async function getStaticPaths() {
+  const res = await fetch(`${API_URL}/events`)
+  const events = await res.json()
 
-//   const paths = events.map((evt) => ({
-//     params: { slug: evt.slug },
-//   }))
+  const paths = events.map((evt) => ({
+    params: { slug: evt.slug },
+  }))
 
-//   return {
-//     paths,
-//     fallback: true, // doesn't generated pathiig unshuulahiin tul ene tohirgoos
-//   }
-// }
+  return {
+    paths,
+    fallback: false, // doesn't generated pathiig unshuulahiin tul ene tohirgoos
+    // Anhnii utga true bsan
+  }
+}
 
-// export async function getStaticProps({ params: { slug } }) {
-//   const res = await fetch(`${API_URL}/events?slug=${slug}`)
-//   const events = await res.json()
-
-//   return {
-//     props: {
-//       evt: events[0],
-//     },
-//     revalidate: 1,
-//   }
-// }
-
-export async function getServerSideProps({ query: { slug } }) {
+export async function getStaticProps({ params: { slug } }) {
   const res = await fetch(`${API_URL}/events?slug=${slug}`)
   const events = await res.json()
 
@@ -84,5 +72,17 @@ export async function getServerSideProps({ query: { slug } }) {
     props: {
       evt: events[0],
     },
+    revalidate: 1,
   }
 }
+
+// export async function getServerSideProps({ query: { slug } }) {
+//   const res = await fetch(`${API_URL}/events?slug=${slug}`)
+//   const events = await res.json()
+
+//   return {
+//     props: {
+//       evt: events[0],
+//     },
+//   }
+// }
